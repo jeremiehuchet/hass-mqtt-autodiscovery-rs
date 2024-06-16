@@ -47,13 +47,13 @@ fn device() -> Device {
 
 async fn do_with_mosquitto(callback: fn(AsyncClient) -> ()) -> (Publish, Value) {
     // start a mosquitto container
-    let mosquitto_container = mosquitto::Mosquitto.start().await;
+    let mosquitto_container = mosquitto::Mosquitto::default().start().await.unwrap();
 
     // open a client to communicate with mosquitto container
     let mqtt_options = MqttOptions::new(
         "test",
         "127.0.0.1",
-        mosquitto_container.get_host_port_ipv4(1883).await,
+        mosquitto_container.get_host_port_ipv4(1883).await.unwrap(),
     );
     let (client, mut eventloop) = AsyncClient::new(mqtt_options, 10);
 
